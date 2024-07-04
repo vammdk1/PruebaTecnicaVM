@@ -1,4 +1,5 @@
-# PruebaTecnicaVM
-# Desde la ruta principal del proyecto:
-# Utilizar:  node .\App\backend\express.js para ejecutar el servidor
-# utilizar:  dotnet run para ejecutar el .Net
+# Desde la ruta principal del proyecto usando la consola de comandos
+* Ejecutar el servidor: 
+```node .\App\backend\express.js```
+* Ejecutar el .Net: 
+```dotnet run```
