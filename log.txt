@@ -1,6 +1,0 @@
-2024-07-04T08:51:59.375Z Aplicación iniciada en http://localhost:8080
-2024-07-04T08:51:59.375Z Nota guardada
-2024-07-04T08:51:59.375Z Nota leída:esto es una nota
-2024-07-04T08:51:59.375Z Nota enviada:esto es una nota
-2024-07-04T08:51:59.375Z Nota eliminada
-2024-07-04T08:51:59.375Z Nota eliminada enviada
