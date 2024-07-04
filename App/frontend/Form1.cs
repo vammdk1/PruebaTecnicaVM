@@ -1,5 +1,6 @@
 using System.Security.Policy;
 using System.Text;
+using System.Text.Json;
 
 namespace PruebaTecnicaVM;
 
@@ -9,6 +10,7 @@ public partial class Form1 : Form
     private string url;
     private TextBox notas = new TextBox();
     private Label label = new Label();
+    private int num = 1;
 
     public Form1(string port, string url)
     {
@@ -120,7 +122,8 @@ public partial class Form1 : Form
         using (HttpClient client = new HttpClient())
         {
             //enviar texto
-            var content = new StringContent($"{{ \"text\": \"{texto}\" }}", Encoding.UTF8, "application/json");
+            var content = new StringContent($"{{ \"num\": \"{num}\", \"nota\": \"{texto}\" }}", Encoding.UTF8, "application/json");
+    
             //recibir respuesta
             HttpResponseMessage response = await client.PostAsync(fullurl, content);
             if (!response.IsSuccessStatusCode)
@@ -131,21 +134,37 @@ public partial class Form1 : Form
             {
                 //limpiar espacio de texto
                 notas.Text = "";
+                num++;
             }
         }
     }
 
-    private void read_Click(object? sender, EventArgs e)
+    private async void read_Click(object? sender, EventArgs e)
     {
         string fullurl = $"{url}:{port}/read";
         using (HttpClient client = new HttpClient())
         {
-            HttpResponseMessage response = client.GetAsync(fullurl).Result;
+            HttpResponseMessage response = await client.GetAsync(fullurl);
             if (response.IsSuccessStatusCode)
             {
                 //mostrar texto
-                string texto = response.Content.ReadAsStringAsync().Result;
-                label.Text = texto;
+                string texto = await response.Content.ReadAsStringAsync();
+                
+                // Deserializar el JSON
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true // Hace que la serialización sea insensible a mayúsculas y minúsculas
+                };
+                var notas = JsonSerializer.Deserialize<Nota[]>(texto, options);
+
+                // Construir el texto para mostrar en el label
+                string mensaje = "";
+                foreach (var nota in notas)
+                {
+                    mensaje += $"{nota.Nombre} : {nota.Datos}\n";
+                }
+
+                label.Text = mensaje;
             }
             else
             {
@@ -170,7 +189,15 @@ public partial class Form1 : Form
             {
                 //limpiar espacio de texto
                 label.Text = "";
+                num = 1;
             }
         }
     }
+
+        public class Nota
+    {
+        public string? Nombre { get; set; }
+        public string? Datos { get; set; }
+    }
+   
 }

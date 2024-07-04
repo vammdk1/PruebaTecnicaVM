@@ -9,6 +9,8 @@ app.use(express.json());
 const port = 8080;
 //fecha para ordenar logs
 const date = new Date();
+//directorio de archivos
+const dirNotas = 'Archivos\\Notas';
 
 // Ruta principal
 app.get('/status', (req, res) => {
@@ -20,11 +22,15 @@ app.get('/status', (req, res) => {
 // Recibir texto de nota
 app.post('/save', (req, res) => {
     console.log(date.toISOString() + " Solicitud de guardar nota recibida");
-    const { text } = req.body;
-    console.log(text);
+    const { nota } = req.body;
+    console.log(nota);
+    const {num} = req.body;
+    console.log(num);
+
     res.send('Nota recibida');
+    wLog(date.toISOString() + " Nota recibida enviada");
     //almacenar nota
-    fs.writeFile('Archivos\\notas\\nota.txt', text, (err) => {
+    fs.writeFile(`${dirNotas}\\nota${num}.txt`, nota, (err) => {
         if (err) {
             console.log(err);
             wLog(date.toISOString() + " Error al guardar nota:" + err);
@@ -36,34 +42,70 @@ app.post('/save', (req, res) => {
 
 // Leer texto de nota
 app.get('/read', (req, res) => {
-    console.log(date.toISOString() + " Solicitud de leer nota recibida");
-    fs.readFile('Archivos\\notas\\nota.txt', 'utf8', (err, data) => {
+    console.log(date.toISOString() + " Solicitud de leer notas recibida");
+
+    fs.readdir(dirNotas, (err, archivos) => {
         if (err) {
             console.log(err);
-            res.send('Error al leer nota');
-            wLog(date.toISOString() + " Error al leer nota:" + err);
-        } else {
-            console.log(data);
-            wLog(date.toISOString() + " Nota leída:" + data);
-            res.send(data);
-            wLog(date.toISOString() + " Nota enviada:" + data);
-        }
+            res.send('Error al leer directorio');
+            wLog(date.toISOString() + " Error al leer directorio:" + err);
+            return;
+        } 
+
+        // filtro de elementos txt
+        const archivosTXT = archivos.filter(archivo => archivo.endsWith('.txt'));
+        // procesar datos
+        const datosProcesados = archivosTXT.map(archivo => {
+            return new Promise((resolve, reject) => {
+                fs.readFile(`${dirNotas}\\${archivo}`, 'utf-8', (err, datos) => {
+                    if (err) {
+                        reject(err);
+                        console.log(err);
+                    } else {
+                        resolve({nombre: archivo.replace('.txt',''), datos});
+                        console.log(" Nota leída");
+                        wLog(date.toISOString() + " Nota leída");
+                        }
+                    }
+                );}
+            );}
+        );
+
+        Promise.all(datosProcesados).then(notas => {
+            res.json(notas);
+            console.log(notas)
+            wLog(date.toISOString() + " Notas leídas enviadas");
+        })
+        .catch(err => {
+            console.log(err);
+            res.send('Error al leer notas');
+            wLog(date.toISOString() + " Error al leer notas:" + err);
+        });
     });
 });
 
 //Eliminar nota
 app.delete('/delete', (req, res) => {
     console.log(date.toISOString() + " Solicitud de eliminar notas recibida");
-    fs.unlink('Archivos\\notas\\nota.txt', (err) => {
+    fs.readdir(dirNotas, (err, archivos) => {
         if (err) {
             console.log(err);
-            res.send('Error al eliminar nota');
-            wLog(date.toISOString() + " Error al eliminar nota:" + err);
+            res.send('Error al acceder al directorio de notas');
+            wLog(date.toISOString() + " Error al acceder al directorio de notas:" + err);
         } else {
-            console.log(" Nota eliminada");
-            wLog(date.toISOString() + " Nota eliminada");
+            archivos.forEach(element => {
+                fs.unlink(`${dirNotas}\\${element}`, (err) => {
+                    if (err) {
+                        console.log(err);
+                        wLog(date.toISOString() + " Error al eliminar nota:" + err);
+                    } else {
+                        console.log(" Nota eliminada");
+                        wLog(date.toISOString() + `Nota ${element} elimina`);
+                    }
+                });                
+            });
             res.send('Nota eliminada');
-            wLog(date.toISOString() + " Nota eliminada enviada");
+            wLog(date.toISOString() + " Notas eliminadas notificadas");
         }
     });
 });
