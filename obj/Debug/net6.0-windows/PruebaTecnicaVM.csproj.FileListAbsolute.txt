@@ -1,0 +1,15 @@
+D:\GitHub\PruebaTecnicaVM\bin\Debug\net6.0-windows\PruebaTecnicaVM.exe
+D:\GitHub\PruebaTecnicaVM\bin\Debug\net6.0-windows\PruebaTecnicaVM.deps.json
+D:\GitHub\PruebaTecnicaVM\bin\Debug\net6.0-windows\PruebaTecnicaVM.runtimeconfig.json
+D:\GitHub\PruebaTecnicaVM\bin\Debug\net6.0-windows\PruebaTecnicaVM.dll
+D:\GitHub\PruebaTecnicaVM\bin\Debug\net6.0-windows\PruebaTecnicaVM.pdb
+D:\GitHub\PruebaTecnicaVM\obj\Debug\net6.0-windows\PruebaTecnicaVM.csproj.AssemblyReference.cache
+D:\GitHub\PruebaTecnicaVM\obj\Debug\net6.0-windows\PruebaTecnicaVM.GeneratedMSBuildEditorConfig.editorconfig
+D:\GitHub\PruebaTecnicaVM\obj\Debug\net6.0-windows\PruebaTecnicaVM.AssemblyInfoInputs.cache
+D:\GitHub\PruebaTecnicaVM\obj\Debug\net6.0-windows\PruebaTecnicaVM.AssemblyInfo.cs
+D:\GitHub\PruebaTecnicaVM\obj\Debug\net6.0-windows\PruebaTecnicaVM.csproj.CoreCompileInputs.cache
+D:\GitHub\PruebaTecnicaVM\obj\Debug\net6.0-windows\PruebaTecnicaVM.dll
+D:\GitHub\PruebaTecnicaVM\obj\Debug\net6.0-windows\refint\PruebaTecnicaVM.dll
+D:\GitHub\PruebaTecnicaVM\obj\Debug\net6.0-windows\PruebaTecnicaVM.pdb
+D:\GitHub\PruebaTecnicaVM\obj\Debug\net6.0-windows\PruebaTecnicaVM.genruntimeconfig.cache
+D:\GitHub\PruebaTecnicaVM\obj\Debug\net6.0-windows\ref\PruebaTecnicaVM.dll
