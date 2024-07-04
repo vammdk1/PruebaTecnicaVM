@@ -29,8 +29,28 @@ public partial class Form1 : Form
         int y = 20;
 
         InitializeComponent();
+        ComprobarConexion();
         misNotas(x, y, spaceT_X);
         misBotones(x, y, size_X, size_Y, space_X);
+    }
+
+    private async void ComprobarConexion()
+    {
+        string fullurl = $"{url}:{port}/status";
+        using (HttpClient client = new HttpClient())
+        {
+            try{
+                //comprobar conexion
+                HttpResponseMessage response = await client.GetAsync(fullurl);
+            }
+            catch (HttpRequestException)
+            {
+                //mostrar mensaje de error
+                MessageBox.Show("No se ha podido establecer conexión con el servidor");
+                //cerrar aplicacion si no hay conexion
+                Application.Exit();
+            }  
+        }
     }
 
     private void misNotas(int x ,int y, int space)
@@ -99,15 +119,18 @@ public partial class Form1 : Form
         string fullurl = $"{url}:{port}/save";
         using (HttpClient client = new HttpClient())
         {
+            //enviar texto
             var content = new StringContent($"{{ \"text\": \"{texto}\" }}", Encoding.UTF8, "application/json");
+            //recibir respuesta
             HttpResponseMessage response = await client.PostAsync(fullurl, content);
-
             if (!response.IsSuccessStatusCode)
             {
+                //si error mostrar mensaje
                 MessageBox.Show($"Error al enviar texto: {response.StatusCode}");
             }else
             {
-               notas.Text = "";
+                //limpiar espacio de texto
+                notas.Text = "";
             }
         }
     }
@@ -120,11 +143,13 @@ public partial class Form1 : Form
             HttpResponseMessage response = client.GetAsync(fullurl).Result;
             if (response.IsSuccessStatusCode)
             {
+                //mostrar texto
                 string texto = response.Content.ReadAsStringAsync().Result;
                 label.Text = texto;
             }
             else
             {
+                //mostrar mensaje de error
                 MessageBox.Show($"Error al leer texto: {response.StatusCode}");
             }
         }
@@ -138,17 +163,14 @@ public partial class Form1 : Form
             HttpResponseMessage response = client.DeleteAsync(fullurl).Result;
             if (!response.IsSuccessStatusCode)
             {
+                //mostrar mensaje de error
                 MessageBox.Show($"Error al eliminar texto: {response.StatusCode}");
             }
             else
             {
+                //limpiar espacio de texto
                 label.Text = "";
             }
         }
-    }
-
-    private void actualizaTexto(object? sender, EventArgs e)
-    {
-        MessageBox.Show("actualiza texto");
     }
 }

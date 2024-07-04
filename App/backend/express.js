@@ -10,6 +10,13 @@ const port = 8080;
 //fecha para ordenar logs
 const date = new Date();
 
+// Ruta principal
+app.get('/status', (req, res) => {
+    console.log(date.toISOString() + " Conexión recibida");
+    res.send(200);
+    wLog(date.toISOString() + " Conexión recibida");
+});
+
 // Recibir texto de nota
 app.post('/save', (req, res) => {
     console.log(date.toISOString() + " Solicitud de guardar nota recibida");
@@ -17,7 +24,7 @@ app.post('/save', (req, res) => {
     console.log(text);
     res.send('Nota recibida');
     //almacenar nota
-    fs.writeFile('nota.txt', text, (err) => {
+    fs.writeFile('Archivos\\notas\\nota.txt', text, (err) => {
         if (err) {
             console.log(err);
             wLog(date.toISOString() + " Error al guardar nota:" + err);
@@ -30,7 +37,7 @@ app.post('/save', (req, res) => {
 // Leer texto de nota
 app.get('/read', (req, res) => {
     console.log(date.toISOString() + " Solicitud de leer nota recibida");
-    fs.readFile('nota.txt', 'utf8', (err, data) => {
+    fs.readFile('Archivos\\notas\\nota.txt', 'utf8', (err, data) => {
         if (err) {
             console.log(err);
             res.send('Error al leer nota');
@@ -47,7 +54,7 @@ app.get('/read', (req, res) => {
 //Eliminar nota
 app.delete('/delete', (req, res) => {
     console.log(date.toISOString() + " Solicitud de eliminar notas recibida");
-    fs.unlink('nota.txt', (err) => {
+    fs.unlink('Archivos\\notas\\nota.txt', (err) => {
         if (err) {
             console.log(err);
             res.send('Error al eliminar nota');
@@ -64,15 +71,15 @@ app.delete('/delete', (req, res) => {
 //log
 function wLog(texto) {
     //si no existe el fichero log.txt, se crea
-    if(!fs.existsSync('log.txt')){
-        fs.writeFile('log.txt', '', (err) => {
+    if(!fs.existsSync('Archivos\\Log\\log.txt')){
+        fs.writeFile('Archivos\\Log\\log.txt', '', (err) => {
             if (err) {
                 console.log(err);
             }
         });
     }
     //escribir en el fichero log.txt
-    fs.appendFile('log.txt', texto + '\n', (err) => {
+    fs.appendFile('Archivos\\Log\\log.txt', texto + '\n', (err) => {
         if (err) {
             console.log(err);
         }
