@@ -10,11 +10,6 @@ const port = 8080;
 //fecha para ordenar logs
 const date = new Date();
 
-// Ruta de inicio
-app.get('/', (req, res) => {
-    res.send('Hola Mundo');
-})
-
 // Recibir texto de nota
 app.post('/save', (req, res) => {
     console.log(date.toISOString() + " Solicitud de guardar nota recibida");
@@ -25,8 +20,10 @@ app.post('/save', (req, res) => {
     fs.writeFile('nota.txt', text, (err) => {
         if (err) {
             console.log(err);
+            wLog(date.toISOString() + " Error al guardar nota:" + err);
         }
         console.log(date.toISOString() + " Nota guardada");
+        wLog(date.toISOString() + " Nota guardada");
     });
 });
 
@@ -37,9 +34,12 @@ app.get('/read', (req, res) => {
         if (err) {
             console.log(err);
             res.send('Error al leer nota');
+            wLog(date.toISOString() + " Error al leer nota:" + err);
         } else {
             console.log(data);
+            wLog(date.toISOString() + " Nota leída:" + data);
             res.send(data);
+            wLog(date.toISOString() + " Nota enviada:" + data);
         }
     });
 });
@@ -48,16 +48,40 @@ app.get('/read', (req, res) => {
 app.delete('/delete', (req, res) => {
     console.log(date.toISOString() + " Solicitud de eliminar notas recibida");
     fs.unlink('nota.txt', (err) => {
-        if (err) {s
+        if (err) {
             console.log(err);
             res.send('Error al eliminar nota');
+            wLog(date.toISOString() + " Error al eliminar nota:" + err);
         } else {
-            console.log(date.toISOString() + " Nota eliminada");
+            console.log(" Nota eliminada");
+            wLog(date.toISOString() + " Nota eliminada");
             res.send('Nota eliminada');
+            wLog(date.toISOString() + " Nota eliminada enviada");
         }
     });
 });
 
+//log
+function wLog(texto) {
+    //si no existe el fichero log.txt, se crea
+    if(!fs.existsSync('log.txt')){
+        fs.writeFile('log.txt', '', (err) => {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+    //escribir en el fichero log.txt
+    fs.appendFile('log.txt', texto + '\n', (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+}
+
+
+// Iniciar la aplicación en el puerto
 app.listen(port, () => {
     console.log(`La aplicación está corriendo en http://localhost:${port}`);
+    wLog(date.toISOString() + " Aplicación iniciada en http://localhost:" + port);
 });
